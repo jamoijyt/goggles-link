@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Goggles Link: the Goggles OS lenses with a signal above them. Drawn for Goggles Link,
+     the Goggles OS fork of WiVRn. Colours: Goggles green #3ddc84, visor yellow #f1ff9c. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
+  <title>Goggles Link</title>
+  <defs>
+    <linearGradient id="visor" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#f1ff9c"/>
+      <stop offset="0.45" stop-color="#3ddc84"/>
+      <stop offset="1" stop-color="#0a2a26"/>
+    </linearGradient>
+    <linearGradient id="lens" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b2a24"/>
+      <stop offset="1" stop-color="#04100e"/>
+    </linearGradient>
+  </defs>
+  <!-- signal: three arcs above the goggles -->
+  <g fill="none" stroke="#3ddc84" stroke-linecap="round">
+    <path d="M78 46 A17 17 0 0 1 102 46" stroke-width="7"/>
+    <path d="M67 34 A32 32 0 0 1 113 34" stroke-width="7" opacity="0.75"/>
+    <path d="M56 23 A47 47 0 0 1 124 23" stroke-width="7" opacity="0.5"/>
+  </g>
+  <!-- the goggles -->
+  <rect x="8" y="56" width="164" height="112" rx="30" fill="url(#visor)"/>
+  <rect x="8" y="56" width="164" height="112" rx="30" fill="none" stroke="#06120c" stroke-opacity="0.35" stroke-width="2"/>
+  <g stroke="#06120c" stroke-width="10" fill="url(#lens)">
+    <circle cx="57" cy="112" r="27"/>
+    <circle cx="123" cy="112" r="27"/>
+  </g>
+  <!-- a glint on each lens -->
+  <g fill="#f1ff9c" opacity="0.85">
+    <circle cx="48" cy="103" r="5"/>
+    <circle cx="114" cy="103" r="5"/>
+  </g>
+</svg>

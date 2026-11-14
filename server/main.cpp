@@ -999,7 +999,7 @@ int inner_main(int argc, char * argv[], bool show_instructions)
 	                             nullptr);
 
 	// Initialize libnotify
-	notify_init("WiVRn");
+	notify_init("Goggles Link");
 
 	// Main loop
 	g_main_loop_run(main_loop);

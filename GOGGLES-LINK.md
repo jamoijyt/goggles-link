@@ -14,9 +14,12 @@ Kept small on purpose. Every change is listed here.
 | The headset app has its own application ID (`org.gogglesos.link`) and name, so it installs beside WiVRn's app | `build.gradle` (`wivrn_app_id`), set by the workflow |
 | Builds for Goggles OS: a server archive for `/opt/goggles-link` (no Flatpak) with xrizer included, and the headset APK | `.github/workflows/goggles-link.yml` |
 | WiVRn's own build and store-release workflows are removed (they publish WiVRn, not this fork) | `.github/workflows/` |
+| Goggles look in the headset app: the Goggles Link logo (about page, top bar, splash, launcher icon; replaces every seasonal WiVRn logo), a "Goggles" colour theme and accent used by default (settings from older versions move to it once: `goggles_branding`) | `images/goggles-link.svg`, `client/CMakeLists.txt`, `build.gradle`, `client/render/ui_theme.cpp`, `client/configuration.*` |
+| Names the user sees say Goggles Link: welcome and about headers, the in-game hint, the refresh-rate message, the empty server list hint, the licences page (which still credits WiVRn) | `client/scenes/*.cpp` |
+| The server tells games the headset is "... on Goggles Link", and uses that name for desktop notifications and its sleep inhibitor | `server/driver/wivrn_session.cpp`, `server/main.cpp`, `server/sleep_inhibitor.cpp` |
 
-Names inside the software (the `wivrn-server` program, its D-Bus name, its config folder) are
-WiVRn's for now, so the two can't run at the same time, and a stock WiVRn app of the same
+Names inside the software (the `wivrn-server` program, its D-Bus name, its config folder, the
+network protocol) are WiVRn's for now, so the two can't run at the same time, and a stock WiVRn app of the same
 version can still connect.
 
 ## Builds

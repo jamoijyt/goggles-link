@@ -49,10 +49,10 @@ sleep_inhibitor::sleep_inhibitor()
 	        "Inhibit",
 	        g_variant_new(
 	                "(ssss)",
-	                "sleep:idle",                // What
-	                "WiVRn",                     // Who
-	                "A WiVRn session is active", // Why
-	                "block"),                    // Mode
+	                "sleep:idle",             // What
+	                "Goggles Link",           // Who
+	                "A VR session is active", // Why
+	                "block"),                 // Mode
 	        G_DBUS_CALL_FLAGS_NONE,
 	        -1,       // timeout_msec
 	        nullptr,  // fd_list

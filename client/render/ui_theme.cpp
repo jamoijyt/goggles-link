@@ -149,14 +149,40 @@ static theme light()
 	return t;
 }
 
+// Goggles Link: the colours of Goggles OS and its GogglesXR dashboard (deep teal glass, green accent)
+static theme goggles()
+{
+	theme t = dark_default();
+	t.name = "Goggles";
+	t.localized_name = "Goggles";
+	t.accent = rgb(61, 220, 132);
+	t.accent_hovered = rgb(110, 232, 162);
+	t.accent_active = rgb(40, 190, 110);
+	t.on_accent = rgb(5, 32, 18);
+	t.background = rgb(4, 16, 14);
+	t.card = rgb(12, 38, 33);
+	t.card_hovered = rgb(17, 49, 43);
+	t.control = rgb(22, 58, 51);
+	t.control_hovered = rgb(28, 72, 63);
+	t.control_active = rgb(34, 86, 75);
+	t.text = rgb(230, 243, 238);
+	t.text_muted = rgb(159, 191, 180);
+	t.border = rgb(36, 82, 70);
+	t.success = rgb(61, 220, 132);
+	t.rounding = 10;
+	t.card_rounding = 18;
+	return t;
+}
+
 std::vector<theme> presets()
 {
-	return {oled(), dark_default(), midnight(), graphite(), slate_light(), light()};
+	return {goggles(), oled(), dark_default(), midnight(), graphite(), slate_light(), light()};
 }
 
 std::vector<accent_swatch> accent_swatches()
 {
 	return {
+	        {"Goggles", rgb(61, 220, 132), rgb(110, 232, 162), rgb(40, 190, 110)},
 	        {"Blue", rgb(30, 115, 255), rgb(64, 140, 255), rgb(18, 95, 228)},
 	        {"Violet", rgb(132, 72, 255), rgb(152, 98, 255), rgb(112, 52, 232)},
 	        {"Emerald", rgb(0, 200, 132), rgb(28, 214, 150), rgb(0, 172, 112)},

@@ -96,11 +96,14 @@ public:
 	bool app_list_view = false;
 	uint32_t app_icon_size = 0;
 
-	// interface theme, defaults match the built-in "Dark" preset and "Blue" accent
-	std::string theme_preset = "Dark";
-	std::string theme_accent = "Blue";
-	float theme_rounding = 8;
-	float theme_card_rounding = 14;
+	// interface theme, defaults match the built-in "Goggles" preset and accent (Goggles Link)
+	std::string theme_preset = "Goggles";
+	std::string theme_accent = "Goggles";
+	float theme_rounding = 10;
+	float theme_card_rounding = 18;
+	// Goggles Link: 0 for settings saved before Goggles Link had its own look; they are moved
+	// to the Goggles theme once
+	uint32_t goggles_branding = 0;
 	float theme_font_scale = 1.0;
 	float theme_background_alpha = 0.75;
 

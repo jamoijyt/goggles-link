@@ -398,7 +398,7 @@ void scenes::lobby::gui_server_list()
 		if (sorted_cookies.empty())
 		{
 			ImGui::PushStyleColor(ImGuiCol_Text, t.text_muted);
-			ImGui::TextUnformatted(_S("Start a WiVRn server on your local network."));
+			ImGui::TextUnformatted(_S("Open GogglesXR on your Goggles OS PC, on the same network."));
 			ImGui::PopStyleColor();
 		}
 
@@ -805,7 +805,7 @@ void scenes::lobby::gui_debug()
 void scenes::lobby::gui_about()
 {
 	ImGui::PushFont(nullptr, constants::gui::font_size_large);
-	CenterTextH(std::string("WiVRn ") + wivrn::display_version());
+	CenterTextH(std::string("Goggles Link ") + wivrn::display_version());
 	ImGui::PopFont();
 
 	ImGui::Dummy(ImVec2(0, 60));
@@ -855,7 +855,7 @@ void scenes::lobby::gui_first_run()
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, {20, 40});
 
 	ImGui::PushFont(nullptr, constants::gui::font_size_large);
-	CenterTextH(_("Welcome to WiVRn"));
+	CenterTextH(_("Welcome to Goggles Link"));
 	ImGui::PopFont();
 
 	config.set_feature(feature::hand_tracking, true);
@@ -911,7 +911,7 @@ void scenes::lobby::gui_licenses()
 	namespace ui = wivrn::ui;
 	const auto & t = ui::current();
 
-	ui::page_header(_S("Licenses"), _S("Open-source components bundled with WiVRn."));
+	ui::page_header(_S("Licenses"), _S("Open-source components bundled with Goggles Link, which is based on WiVRn."));
 
 	// Components shipping a license file, probed once
 	static const std::vector<std::string> components = [] {
