@@ -200,6 +200,12 @@ class lobby : public scene_impl<lobby>
 	void download(const std::string & url, std::function<void(libcurl::curl_handle & handle)> = {});
 	libcurl::curl_handle * try_get_download_handle(const std::string & url);
 
+	// Goggles Link: ask GitHub once per start whether a newer release exists
+	bool update_check_started = false;
+	bool update_check_done = false;
+	std::string update_available; // newer version, empty if none (or not known yet)
+	void check_for_update();
+
 	std::string downloadable_environment_list_status;
 
 	std::vector<environment_model> load_environment_json(const std::string & json, std::string_view base_url = "");
