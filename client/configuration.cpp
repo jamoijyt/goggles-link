@@ -310,6 +310,16 @@ configuration::configuration(xr::system & system, xr::session & session, const s
 	{
 		spdlog::warn("Cannot read configuration: {}", e.what());
 	}
+
+	// Goggles Link: settings from before it had its own look switch to the Goggles theme once
+	if (goggles_branding < 1)
+	{
+		theme_preset = "Goggles";
+		theme_accent = "Goggles";
+		theme_rounding = 10;
+		theme_card_rounding = 18;
+		goggles_branding = 1;
+	}
 }
 
 const std::vector<config_field> & configuration::config_fields()
@@ -326,6 +336,7 @@ const std::vector<config_field> & configuration::config_fields()
 	        scalar("theme_card_rounding", &configuration::theme_card_rounding),
 	        scalar("theme_font_scale", &configuration::theme_font_scale),
 	        scalar("theme_background_alpha", &configuration::theme_background_alpha),
+	        scalar("goggles_branding", &configuration::goggles_branding),
 	        scalar("passthrough_enabled", &configuration::passthrough_enabled),
 	        scalar("passthrough_boundary_enabled", &configuration::passthrough_boundary_enabled),
 	        scalar("mic_unprocessed_audio", &configuration::mic_unprocessed_audio),

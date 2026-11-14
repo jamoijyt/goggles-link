@@ -82,7 +82,7 @@ tasks.register("generatePngs", GeneratePngsTask) {
     group = "Custom"
 
     // configure defaults
-    svg.set(layout.projectDirectory.file("images/wivrn.svg"))
+    svg.set(layout.projectDirectory.file("images/goggles-link.svg"))  // Goggles Link
     outputDir.set(layout.buildDirectory.dir("generated_resources"))
 
     if (project.hasProperty("wivrn_css")) {
