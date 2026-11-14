@@ -36,7 +36,9 @@
 #include "version.h"
 #include "xr/body_tracker.h"
 #include <algorithm>
+#include <array>
 #include <cassert>
+#include <cctype>
 #include <chrono> // IWYU pragma: keep
 #include <entt/entity/fwd.hpp>
 #include <fastgltf/math.hpp>
@@ -48,7 +50,9 @@
 #include <magic_enum.hpp>
 #include <memory>
 #include <ranges>
+#include <simdjson.h>
 #include <spdlog/fmt/fmt.h>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <uni_algo/case.h>
 #include <utility>
@@ -358,19 +362,121 @@ void scenes::lobby::gui_new_server()
 	ImGui::EndDisabled();
 }
 
+// Goggles Link: the first three numbers of a version ("gl-0.3.1", "0.3.1-2-gabc1234")
+static std::array<int, 3> version_numbers(std::string_view text)
+{
+	std::array<int, 3> numbers{};
+	size_t i = 0;
+	while (i < text.size() and not std::isdigit(static_cast<unsigned char>(text[i])))
+		++i;
+	for (int & part: numbers)
+	{
+		while (i < text.size() and std::isdigit(static_cast<unsigned char>(text[i])))
+			part = part * 10 + (text[i++] - '0');
+		if (i >= text.size() or text[i] != '.')
+			break;
+		++i;
+	}
+	return numbers;
+}
+
+// Goggles Link: ask GitHub (once per start) for the newest release and remember it if it is newer
+void scenes::lobby::check_for_update()
+{
+	if (update_check_started)
+		return;
+	update_check_started = true;
+
+	download("https://api.github.com/repos/jamoijyt/goggles-link/releases/latest", [this](libcurl::curl_handle & handle) {
+		if (handle.get_curl_code() != CURLE_OK or handle.get_response_code() != 200)
+		{
+			spdlog::info("Update check failed (HTTP {})", handle.get_response_code());
+			return;
+		}
+		try
+		{
+			simdjson::dom::parser parser;
+			simdjson::dom::element root = parser.parse(handle.get_response());
+			std::string_view tag;
+			if (root["tag_name"].get(tag) != simdjson::SUCCESS)
+				return;
+			update_check_done = true;
+			if (version_numbers(tag) > version_numbers(wivrn::display_version()))
+			{
+				update_available = std::string(tag.starts_with("gl-") ? tag.substr(3) : tag);
+				spdlog::info("Goggles Link {} is available", update_available);
+			}
+		}
+		catch (std::exception & e)
+		{
+			spdlog::info("Update check failed: {}", e.what());
+		}
+	});
+}
+
 void scenes::lobby::gui_server_list()
 {
 	namespace ui = wivrn::ui;
 	auto & config = application::get_config();
 	const auto & t = ui::current();
 
+	check_for_update();
+
+	// Goggles Link home: the logo, what is happening, and a notice when an update is out
+	{
+		size_t visible = 0;
+		for (const auto & [cookie, data]: config.servers)
+			if ((data.visible and data.compatible) or data.manual)
+				++visible;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ui::metrics::card_item_spacing);
+		ui::begin_card("##goggles hero");
+		{
+			const float logo_size = 104;
+			ImGui::Image(about_picture, {logo_size, logo_size});
+			ImGui::SameLine(0, 28);
+			ImGui::BeginGroup();
+			ImGui::Dummy({0, 6});
+			ImGui::PushFont(nullptr, ImGui::GetStyle().FontSizeBase * ui::metrics::font_title);
+			ImGui::TextUnformatted("Goggles Link");
+			ImGui::PopFont();
+			ImGui::PushStyleColor(ImGuiCol_Text, visible ? t.success : t.text_muted);
+			if (visible == 0)
+				ImGui::TextUnformatted("Looking for your PC…  Open GogglesXR on your Goggles OS PC.");
+			else if (visible == 1)
+				ImGui::TextUnformatted("Your PC is ready. Press Connect to start playing.");
+			else
+				ImGui::TextUnformatted(fmt::format("{} PCs are ready. Pick one to start playing.", visible).c_str());
+			ImGui::PopStyleColor();
+			ImGui::EndGroup();
+		}
+		ui::end_card();
+
+		if (not update_available.empty())
+		{
+			ui::begin_card("##goggles update");
+			{
+				ui::chip(ui::icon_label(ICON_FA_CIRCLE_INFO, "Update available"), ui::chip_style::accent);
+				ImGui::SameLine(0, 16);
+				ImGui::AlignTextToFramePadding();
+				ImGui::TextUnformatted(fmt::format("Goggles Link {} is out (this headset has {}).", update_available, wivrn::display_version()).c_str());
+				ImGui::PushStyleColor(ImGuiCol_Text, t.text_muted);
+				ImGui::TextWrapped("%s", "To update, plug this headset into your PC with a USB cable, open the GogglesXR app on the PC and press \"Install on headset\".");
+				ImGui::PopStyleColor();
+			}
+			ui::end_card();
+		}
+		ImGui::PopStyleVar();
+		ImGui::Dummy({0, 8});
+	}
+
 	// header with an Add server button on the right
 	const ImVec2 hstart = ImGui::GetCursorPos();
 	const float header_avail = ImGui::GetContentRegionAvail().x;
-	ui::page_header(_cS("page header title", "Computers"), _cS("page header subtitle", "Pick a PC running the WiVRn server to stream from."));
+	ui::page_header("Your PCs", "PCs running GogglesXR on your network appear here by themselves.");
 	const ImVec2 hend = ImGui::GetCursorPos();
 
-	const std::string add_label = _("Add server");
+	const std::string add_label = "Add a PC";
 	const float add_w = ui::button_width(ICON_FA_PLUS, add_label);
 	ImGui::SetCursorPos({hstart.x + header_avail - add_w, hstart.y});
 	if (ui::button(ICON_FA_PLUS, add_label, ui::button_style::primary))
@@ -814,6 +920,17 @@ void scenes::lobby::gui_about()
 	ImGui::SetCursorPosX(win_width / 4);
 
 	ImGui::Image(about_picture, {win_width / 2, win_width / 2});
+
+	// Goggles Link: where it comes from, and whether it is up to date
+	ImGui::Dummy(ImVec2(0, 30));
+	check_for_update();
+	if (not update_available.empty())
+		CenterTextH(fmt::format("Goggles Link {} is available. Update from the GogglesXR app on your PC.", update_available));
+	else if (update_check_done)
+		CenterTextH("This is the newest version.");
+	ImGui::PushStyleColor(ImGuiCol_Text, wivrn::ui::current().text_muted);
+	CenterTextH("The VR streaming app of Goggles OS. Based on WiVRn, an open-source project.");
+	ImGui::PopStyleColor();
 }
 
 void scenes::lobby::gui_first_run()
@@ -1247,7 +1364,7 @@ std::vector<std::pair<int, XrCompositionLayerQuad>> scenes::lobby::draw_gui(XrTi
 
 		wivrn::ui::begin_sidebar(TopBarH, TabWidth, 3);
 		{
-			if (wivrn::ui::nav_item(ICON_FA_COMPUTER, _cS("tab label", "Computers"), current_tab == tab::server_list))
+			if (wivrn::ui::nav_item(ICON_FA_COMPUTER, "Home", current_tab == tab::server_list))
 				current_tab = tab::server_list;
 
 			wivrn::ui::nav_section(_cS("tab group", "SETTINGS"));

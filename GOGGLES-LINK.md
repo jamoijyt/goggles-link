@@ -16,6 +16,9 @@ Kept small on purpose. Every change is listed here.
 | WiVRn's own build and store-release workflows are removed (they publish WiVRn, not this fork) | `.github/workflows/` |
 | Goggles look in the headset app: the Goggles Link logo (about page, top bar, splash, launcher icon; replaces every seasonal WiVRn logo), a "Goggles" colour theme and accent used by default (settings from older versions move to it once: `goggles_branding`) | `images/goggles-link.svg`, `client/CMakeLists.txt`, `build.gradle`, `client/render/ui_theme.cpp`, `client/configuration.*` |
 | Names the user sees say Goggles Link: welcome and about headers, the in-game hint, the refresh-rate message, the empty server list hint, the licences page (which still credits WiVRn) | `client/scenes/*.cpp` |
+| Home page of the headset app: a Goggles Link card with the logo and what is happening ("Looking for your PC…"), "Your PCs" instead of "Computers", the wordmark in the top bar, About says where it comes from | `client/scenes/lobby_gui.cpp`, `client/render/ui_widgets.cpp` |
+| Update check: once per start the app asks GitHub for this repository's newest release and shows a notice on Home and About when it is newer (updating is done from the GogglesXR app on the PC) | `client/scenes/lobby_gui.cpp` (`check_for_update`), `client/scenes/lobby.h` |
+| The lobby's default environment is the Goggles night scene (the dashboard's 360° picture inside a sphere); WiVRn's own default lobby stays as a choice; older settings move to it once | `assets-source/goggles-home.*`, `tools/goggles/make_environment.py`, `client/CMakeLists.txt`, `client/configuration.*`, `client/scenes/lobby.cpp` |
 | The server tells games the headset is "... on Goggles Link", and uses that name for desktop notifications and its sleep inhibitor | `server/driver/wivrn_session.cpp`, `server/main.cpp`, `server/sleep_inhibitor.cpp` |
 
 Names inside the software (the `wivrn-server` program, its D-Bus name, its config folder, the

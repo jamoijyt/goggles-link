@@ -236,7 +236,7 @@ std::unique_ptr<wivrn_session> scenes::lobby::connect_to_session(wivrn_discover:
 			throw std::runtime_error(_("Incompatible server: no protocol field in TXT"));
 
 		if (protocol->second != protocol_string)
-			throw std::runtime_error(fmt::format(_F("Incompatible WiVRn server protocol (client: {}, server: {})"), protocol_string, protocol->second));
+			throw std::runtime_error(fmt::format(_F("This headset app and the PC have different versions of Goggles Link (headset: {}, PC: {}). Update both."), protocol_string, protocol->second));
 	}
 
 	// Only the automatically discovered servers already have their IP addresses available
@@ -1347,14 +1347,27 @@ void scenes::lobby::on_focused()
 
 	local_environments.push_back(
 	        environment_model{
-	                .name = gettext_noop("Default environment"),
-	                .author = "",
+	                .name = "Goggles night",
+	                .author = "Goggles OS",
 	                .description = "",
 	                .screenshot_url = "",
 	                .gltf_url = "default",
 	                .builtin = true,
 	                .override_order = -1,
 	                .local_gltf_path = application::get_default_config().environment_model,
+	                .screenshot = imgui_ctx->load_texture("assets://goggles-home.ktx2")});
+
+	// WiVRn's own default lobby, kept as a choice
+	local_environments.push_back(
+	        environment_model{
+	                .name = gettext_noop("Default environment"),
+	                .author = "WiVRn",
+	                .description = "",
+	                .screenshot_url = "",
+	                .gltf_url = "wivrn-default",
+	                .builtin = true,
+	                .override_order = -1,
+	                .local_gltf_path = "assets://ground.glb",
 	                .screenshot = imgui_ctx->load_texture("assets://default-environment.ktx2")});
 
 	std::ranges::sort(local_environments, std::less{});

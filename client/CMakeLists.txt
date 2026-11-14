@@ -306,10 +306,14 @@ wivrn_generate_ktx(        SOURCE ${CMAKE_CURRENT_BINARY_DIR}/wivrn-christmas.pn
 wivrn_generate_ktx(        SOURCE ${ASSETS_SRC_DIR}/default_icon.png                    DESTINATION ${ASSETS_DIR}/default_icon.ktx2                   TARGET wivrn)
 wivrn_generate_ktx(        SOURCE ${CMAKE_CURRENT_BINARY_DIR}/passthrough.png           DESTINATION ${ASSETS_DIR}/passthrough.ktx2                    TARGET wivrn)
 wivrn_generate_ktx(        SOURCE ${CMAKE_CURRENT_BINARY_DIR}/default-environment.png   DESTINATION ${ASSETS_DIR}/default-environment.ktx2            TARGET wivrn)
+# Goggles Link: the Goggles night lobby (built by tools/goggles/make_environment.py) and its thumbnail
+wivrn_generate_ktx(        SOURCE ${ASSETS_SRC_DIR}/goggles-home.png                    DESTINATION ${ASSETS_DIR}/goggles-home.ktx2                   TARGET wivrn)
 if(WIVRN_COMPRESS_GLB)
     wivrn_gltf_transform_uastc(SOURCE ${ASSETS_SRC_DIR}/ground.glb                      DESTINATION ${ASSETS_DIR}/ground.glb                          TARGET wivrn ZSTD 20)
+    wivrn_gltf_transform_uastc(SOURCE ${ASSETS_SRC_DIR}/goggles-home.glb                DESTINATION ${ASSETS_DIR}/goggles-home.glb                    TARGET wivrn ZSTD 20)
 else()
     wivrn_copy_file(       SOURCE ${ASSETS_SRC_DIR}/ground.glb                          DESTINATION ${ASSETS_DIR}/ground.glb                          TARGET wivrn)
+    wivrn_copy_file(       SOURCE ${ASSETS_SRC_DIR}/goggles-home.glb                    DESTINATION ${ASSETS_DIR}/goggles-home.glb                    TARGET wivrn)
 endif()
 
 wivrn_webxr_download()

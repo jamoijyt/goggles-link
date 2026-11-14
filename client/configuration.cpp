@@ -320,6 +320,13 @@ configuration::configuration(xr::system & system, xr::session & session, const s
 		theme_card_rounding = 18;
 		goggles_branding = 1;
 	}
+	// ...and from before it had its own lobby move from WiVRn's default lobby to the Goggles one
+	if (goggles_branding < 2)
+	{
+		if (environment_model == "assets://ground.glb")
+			environment_model = "assets://goggles-home.glb";
+		goggles_branding = 2;
+	}
 }
 
 const std::vector<config_field> & configuration::config_fields()

@@ -117,7 +117,7 @@ public:
 
 	std::string virtual_keyboard_layout = "QWERTY";
 
-	std::string environment_model = "assets://ground.glb";
+	std::string environment_model = "assets://goggles-home.glb"; // Goggles Link: the Goggles night scene
 
 	bool override_foveation_enable = false;
 	float override_foveation_pitch = -10 * M_PI / 180;
