@@ -736,10 +736,12 @@ gboolean on_handle_set_client_tab(WivrnServer * skeleton, GDBusMethodInvocation 
 	return G_SOURCE_CONTINUE;
 }
 
+// Goggles Link: Bitrate is also writable over D-Bus, so the GogglesXR dashboard can change the
+// stream's bitrate live; values outside 1 to 500 Mb/s are ignored.
 void on_bitrate(WivrnServer * server, const GParamSpec * pspec, gpointer data)
 {
 	auto bitrate = wivrn_server_get_bitrate(server);
-	if (bitrate > 0)
+	if (bitrate >= 1'000'000 and bitrate <= 500'000'000)
 		wivrn_ipc_socket_main_loop->send(to_monado::set_bitrate{bitrate});
 }
 
