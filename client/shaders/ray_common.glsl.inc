@@ -112,10 +112,19 @@ void main()
 // Fragment output
 layout(location = 0) out vec4 out_color;
 
+// Goggles Link: the laser is the Goggles green (#3ddc84, linear and scaled so green is 1) instead
+// of the texture's rainbow bands. The texture still gives the brightness, so the fade along the
+// laser and its trail stays the same.
+vec3 goggles_tint(vec3 rainbow)
+{
+    float brightness = max(rainbow.r, max(rainbow.g, rainbow.b));
+    return brightness * vec3(0.065, 1.0, 0.322);
+}
+
 void main()
 {
 #ifdef HTC_WORKAROUND
-    out_color = vec4(mesh.emissive_factor * texture(emissive_texture, texcoord).rgb, 1.0 / 255.0);
+    out_color = vec4(mesh.emissive_factor * goggles_tint(texture(emissive_texture, texcoord).rgb), 1.0 / 255.0);
 #else // HTC_WORKAROUND
     for (uint i = 0; i < nb_windows; i++)
     {
@@ -135,7 +144,7 @@ void main()
 
     // https://registry.khronos.org/OpenXR/specs/1.1/html/xrspec.html#fundamentals-colors
     // alpha can't be 0 or it will zero RGB values too
-    out_color = vec4(mesh.emissive_factor * texture(emissive_texture, texcoord).rgb, 1.0 / 255.0);
+    out_color = vec4(mesh.emissive_factor * goggles_tint(texture(emissive_texture, texcoord).rgb), 1.0 / 255.0);
 #endif // HTC_WORKAROUND
 
 }

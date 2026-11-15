@@ -19,6 +19,7 @@ Kept small on purpose. Every change is listed here.
 | Home page of the headset app: a Goggles Link card with the logo and what is happening ("Looking for your PC…"), "Your PCs" instead of "Computers", the wordmark in the top bar, About says where it comes from | `client/scenes/lobby_gui.cpp`, `client/render/ui_widgets.cpp` |
 | Update check: once per start the app asks GitHub for this repository's newest release and shows a notice on Home and About when it is newer (updating is done from the GogglesXR app on the PC) | `client/scenes/lobby_gui.cpp` (`check_for_update`), `client/scenes/lobby.h` |
 | The lobby's default environment is the Goggles night scene (the dashboard's 360° picture inside a sphere); WiVRn's own default lobby stays as a choice; older settings move to it once | `assets-source/goggles-home.*`, `tools/goggles/make_environment.py`, `client/CMakeLists.txt`, `client/configuration.*`, `client/scenes/lobby.cpp` |
+| Laser pointers are the Goggles green instead of rainbow bands (the texture still sets the brightness and fade) | `client/shaders/ray_common.glsl.inc` |
 | The server tells games the headset is "... on Goggles Link", and uses that name for desktop notifications and its sleep inhibitor | `server/driver/wivrn_session.cpp`, `server/main.cpp`, `server/sleep_inhibitor.cpp` |
 
 Names inside the software (the `wivrn-server` program, its D-Bus name, its config folder, the
